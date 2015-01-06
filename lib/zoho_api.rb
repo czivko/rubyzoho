@@ -130,8 +130,9 @@ module ZohoApi
                          :query => { :newFormat => 1, :authtoken => @auth_token, :scope => 'crmapi',
                                      :parentModule => parent_module, :id => parent_record_id })
 
-      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{parent_module}/row")
       check_for_errors(r)
+      x = REXML::Document.new(r.body).elements.to_a("/response/result/#{related_module}/row")
+      to_hash(x, related_module)
     end
 
     def some(module_name, index = 1, number_of_records = nil, sort_column = :id, sort_order = :asc)
@@ -150,7 +151,7 @@ module ZohoApi
       leads = x.add_element related_module_fields[:related_module]
       row = leads.add_element 'row', { 'no' => '1' }
       related_module_fields[:xml_data].each_pair { |k, v| add_field(row, ApiUtils.symbol_to_string(k), v) }
-  
+
       r = self.class.post(create_url("#{parent_module}", 'updateRelatedRecords'),
                           :query => { :newFormat => 1,
                                       :id => parent_record_id,
