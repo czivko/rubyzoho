@@ -41,7 +41,7 @@ module ZohoApi
       r = self.class.post(create_url(module_name, 'insertRecords'),
                           :query => { :newFormat => 1, :authtoken => @auth_token,
                                       :scope => 'crmapi', :xmlData => x, :wfTrigger => 'true' },
-                          :headers => { 'Content-length' => '0' })
+                          :headers => { 'Content-length' => '0' }, 'Content-Type' => 'application/x-www-form-urlencoded' })
       check_for_errors(r)
       x_r = REXML::Document.new(r.body).elements.to_a('//recorddetail')
       to_hash(x_r, module_name)[0]
@@ -99,7 +99,7 @@ module ZohoApi
       r = self.class.post(create_url(module_name, action_type),
                           :query => { :newFormat => 1, :authtoken => @auth_token,
                                       :scope => 'crmapi', :id => record_id },
-                          :headers => { 'Content-length' => '0' })
+                          :headers => { 'Content-length' => '0' }, 'Content-Type' => 'application/x-www-form-urlencoded' })
       raise('Adding contact failed', RuntimeError, r.response.body.to_s) unless r.response.code == '200'
       check_for_errors(r)
     end
@@ -158,7 +158,7 @@ module ZohoApi
                                       :authtoken => @auth_token, :scope => 'crmapi',
                                       :relatedModule => related_module_fields[:related_module],
                                       :xmlData => x, :wfTrigger => 'true' },
-                          :headers => { 'Content-length' => '0' })
+                          :headers => { 'Content-length' => '0' }, 'Content-Type' => 'application/x-www-form-urlencoded' })
 
       check_for_errors(r)
     end
